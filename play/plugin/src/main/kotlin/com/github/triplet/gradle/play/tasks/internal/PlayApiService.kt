@@ -17,7 +17,6 @@ import org.gradle.api.services.BuildServiceParameters
 import org.gradle.tooling.events.FinishEvent
 import org.gradle.tooling.events.OperationCompletionListener
 import org.gradle.tooling.events.task.TaskFailureResult
-import org.gradle.tooling.events.task.TaskFinishEvent
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import javax.inject.Inject
@@ -26,8 +25,17 @@ internal abstract class PlayApiService @Inject constructor(
         private val fileOps: FileSystemOperations,
 ) : BuildService<PlayApiService.Params>, OperationCompletionListener, AutoCloseable {
     val publisher by lazy {
-        credentialStream().use {
-            PlayPublisher(it, parameters.appId.get())
+        if (parameters.useApplicationDefaultCredentials.getOrElse(false) &&
+                (parameters.credentials.asFile.orNull != null ||
+                        System.getenv(PlayPublisher.CREDENTIAL_ENV_VAR) != null)) {
+            error("You cannae dae that")
+        }
+        if (parameters.useApplicationDefaultCredentials.getOrElse(false)) {
+            PlayPublisher(parameters.appId.get(), parameters.impersonateServiceAccount.getOrNull())
+        } else {
+            credentialStream().use {
+                PlayPublisher(it, parameters.appId.get())
+            }
         }
     }
     val edits by lazy {
@@ -147,6 +155,8 @@ internal abstract class PlayApiService @Inject constructor(
     interface Params : BuildServiceParameters {
         val appId: Property<String>
         val credentials: RegularFileProperty
+        val useApplicationDefaultCredentials: Property<Boolean>
+        val impersonateServiceAccount: Property<String>
         val editIdFile: RegularFileProperty
 
         @Suppress("PropertyName") // Don't use this
