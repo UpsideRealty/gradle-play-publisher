@@ -37,16 +37,16 @@ fun MavenPublication.configurePom() = pom {
     }
 }
 
-fun Project.configureMaven(handler: RepositoryHandler) = handler.maven {
-    name = if (isSnapshotBuild) "Snapshots" else "Release"
-    url = if (isSnapshotBuild) {
-        uri("https://oss.sonatype.org/content/repositories/snapshots/")
-    } else {
-        uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-    }
-
-    credentials {
-        username = System.getenv("SONATYPE_NEXUS_USERNAME")
-        password = System.getenv("SONATYPE_NEXUS_PASSWORD")
-    }
-}
+//fun Project.configureMaven(handler: RepositoryHandler) = handler.maven {
+//    name = if (isSnapshotBuild) "Snapshots" else "Release"
+//    url = if (isSnapshotBuild) {
+//        uri("https://oss.sonatype.org/content/repositories/snapshots/")
+//    } else {
+//        uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+//    }
+//
+//    credentials {
+//        username = System.getenv("SONATYPE_NEXUS_USERNAME")
+//        password = System.getenv("SONATYPE_NEXUS_PASSWORD")
+//    }
+//}

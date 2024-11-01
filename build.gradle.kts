@@ -1,4 +1,4 @@
-import io.github.gradlenexus.publishplugin.CloseNexusStagingRepository
+//import io.github.gradlenexus.publishplugin.CloseNexusStagingRepository
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import java.time.Duration
 
@@ -14,7 +14,7 @@ plugins {
 
     // Needed to support publishing all modules atomically
     alias(libs.plugins.gradlePublish) apply false
-    alias(libs.plugins.nexusPublish)
+//    alias(libs.plugins.nexusPublish)
 }
 
 buildScan {
@@ -24,28 +24,28 @@ buildScan {
     publishAlways()
 }
 
-nexusPublishing {
-    repositories {
-        sonatype {
-            username.set(System.getenv("SONATYPE_NEXUS_USERNAME"))
-            password.set(System.getenv("SONATYPE_NEXUS_PASSWORD"))
-        }
-    }
+//nexusPublishing {
+//    repositories {
+//        sonatype {
+//            username.set(System.getenv("SONATYPE_NEXUS_USERNAME"))
+//            password.set(System.getenv("SONATYPE_NEXUS_PASSWORD"))
+//        }
+//    }
+//
+//    transitionCheckOptions {
+//        // 15 minutes
+//        delayBetween.set(Duration.ofSeconds(5))
+//        maxRetries.set(180)
+//    }
+//}
 
-    transitionCheckOptions {
-        // 15 minutes
-        delayBetween.set(Duration.ofSeconds(5))
-        maxRetries.set(180)
-    }
-}
-
-tasks.withType<CloseNexusStagingRepository> {
-    mustRunAfter(allprojects.map {
-        it.tasks.matching { task ->
-            task.name.contains("publishToSonatype")
-        }
-    })
-}
+//tasks.withType<CloseNexusStagingRepository> {
+//    mustRunAfter(allprojects.map {
+//        it.tasks.matching { task ->
+//            task.name.contains("publishToSonatype")
+//        }
+//    })
+//}
 
 val versionName = rootProject.file("version.txt").readText().trim()
 allprojects {
@@ -66,9 +66,9 @@ allprojects {
             }
         }
 
-        extensions.findByType<PublishingExtension>()?.apply {
-            configureMaven(repositories)
-        }
+//        extensions.findByType<PublishingExtension>()?.apply {
+//            configureMaven(repositories)
+//        }
 
         extensions.findByType<SigningExtension>()?.apply {
             isRequired = false

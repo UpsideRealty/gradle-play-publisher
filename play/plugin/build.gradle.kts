@@ -4,6 +4,7 @@ plugins {
     `maven-publish`
     signing
     id("com.gradle.plugin-publish")
+    id("com.google.cloud.artifactregistry.gradle-plugin") version "2.2.3"
 }
 
 dependencies {
@@ -77,6 +78,15 @@ gradlePlugin {
         tags.addAll(listOf("android", "google-play", "publishing", "deployment", "apps", "mobile"))
     }
 }
+
+publishing {
+    repositories {
+        maven {
+            url = uri("artifactregistry://australia-southeast1-maven.pkg.dev/upside-ci/mackay-temporary-test")
+        }
+    }
+}
+
 
 afterEvaluate {
     publishing.publications.named<MavenPublication>("pluginMaven") {

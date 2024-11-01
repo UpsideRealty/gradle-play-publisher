@@ -33,8 +33,8 @@ dependencyResolutionManagement {
                 .versionRef("depUpdates")
             plugin("gradlePublish", "com.gradle.plugin-publish")
                 .versionRef("gradlePublish")
-            plugin("nexusPublish", "io.github.gradle-nexus.publish-plugin")
-                .versionRef("nexusPublish")
+//            plugin("nexusPublish", "io.github.gradle-nexus.publish-plugin")
+//                .versionRef("nexusPublish")
 
             version("agp", "8.2.0")
             version("agp-tools", "31.2.0")
