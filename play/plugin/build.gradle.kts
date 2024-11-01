@@ -82,7 +82,7 @@ gradlePlugin {
 publishing {
     repositories {
         maven {
-            url = uri("artifactregistry://australia-southeast1-maven.pkg.dev/upside-ci/mackay-temporary-test")
+            url = uri("artifactregistry://australia-southeast1-maven.pkg.dev/upside-ci/nct-maven-release")
         }
     }
 }
