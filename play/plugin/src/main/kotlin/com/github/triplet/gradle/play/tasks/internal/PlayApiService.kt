@@ -25,12 +25,19 @@ internal abstract class PlayApiService @Inject constructor(
         private val fileOps: FileSystemOperations,
 ) : BuildService<PlayApiService.Params>, OperationCompletionListener, AutoCloseable {
     val publisher by lazy {
-        if (parameters.useApplicationDefaultCredentials.getOrElse(false) &&
-                (parameters.credentials.asFile.orNull != null ||
-                        System.getenv(PlayPublisher.CREDENTIAL_ENV_VAR) != null)) {
-            error("You cannae dae that")
+        val useAppDefaultCreds = parameters.useApplicationDefaultCredentials.getOrElse(false)
+        val useExplicitCreds = (parameters.credentials.asFile.orNull != null ||
+                System.getenv(PlayPublisher.CREDENTIAL_ENV_VAR) != null)
+
+        if (useAppDefaultCreds && useExplicitCreds) {
+            error("""
+                |Cannot use both application default credentials and explicit credentials.
+                |Please read our docs for more details:
+                |https://github.com/Triple-T/gradle-play-publisher#authenticating-gradle-play-publisher
+            """.trimMargin())
         }
-        if (parameters.useApplicationDefaultCredentials.getOrElse(false)) {
+
+        if (useAppDefaultCreds) {
             PlayPublisher(parameters.appId.get(), parameters.impersonateServiceAccount.getOrNull())
         } else {
             credentialStream().use {
