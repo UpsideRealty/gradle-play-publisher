@@ -46,19 +46,19 @@ internal fun createPublisher(credentials: InputStream): AndroidPublisher {
 internal fun createPublisher(impersonateServiceAccount: String?): AndroidPublisher {
     val transport = buildTransport()
 
-    val credential = impersonateServiceAccount?.let {
-        try {
-            ImpersonatedCredentials.newBuilder()
-                    .setSourceCredentials(GoogleCredentials.getApplicationDefault())
-                    .setTargetPrincipal(impersonateServiceAccount)
-                    .setScopes(listOf(AndroidPublisherScopes.ANDROIDPUBLISHER))
-                    .setLifetime(300)
-                    .setDelegates(null)
-                    .build()
-        } catch (e: Exception) {
-            throw e
-        }
-    } ?: {GoogleCredentials.getApplicationDefault()}
+    val appDefaultCreds = GoogleCredentials.getApplicationDefault()
+
+    val credential = if (impersonateServiceAccount != null) {
+        ImpersonatedCredentials.newBuilder()
+                .setSourceCredentials(appDefaultCreds)
+                .setTargetPrincipal(impersonateServiceAccount)
+                .setScopes(listOf(AndroidPublisherScopes.ANDROIDPUBLISHER))
+                .setLifetime(300)
+                .setDelegates(null)
+                .build()
+    } else {
+        appDefaultCreds
+    }
 
     return AndroidPublisher.Builder(
             transport,
